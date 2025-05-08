@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, StyleSheet, TouchableHighlight } from 'react-native';
 import '../../globals';
 
 
@@ -37,26 +37,24 @@ export default function UserScreen() {
           style={styles.input}
         />
 
-        <Button
-          title="Login"
+        <TouchableHighlight
+          underlayColor="#ddd"
+          style={styles.button}
           onPress={async () => {
             try {
-              console.log('\x1b[31m%s\x1b[0m' , '@@@@LOGIN BUTTON PRESSED@@@@');
-              console.log('\x1b[31m%s\x1b[0m' , 'username:', username);
-              console.log('\x1b[31m%s\x1b[0m' , 'password:', password);
-
+              console.log('\x1b[31m%s\x1b[0m', '@@@@LOGIN BUTTON PRESSED@@@@');
+              console.log('\x1b[31m%s\x1b[0m', 'username:', username);
+              console.log('\x1b[31m%s\x1b[0m', 'password:', password);
 
               const response = await fetch('http://192.168.18.87:3000/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password}), // add a password input too!
+                body: JSON.stringify({ username, password }),
               });
 
               const data = await response.json();
               if (data.success) {
-
-                global.username =  username
-
+                global.username = username;
                 setIsLoggedIn(true);
               } else {
                 alert('Login failed');
@@ -66,10 +64,14 @@ export default function UserScreen() {
               alert('Error connecting to server');
             }
           }}
-        />
+        >
+        <Text style={styles.buttonText}>Login</Text>
+        </TouchableHighlight>
 
       </View>
+
     );
+
   }
 
   // 👤 Mostrar pantalla de perfil, al darle al boton login
@@ -102,5 +104,18 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 12,
+  },
+  button: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });

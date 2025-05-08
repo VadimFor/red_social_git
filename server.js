@@ -50,6 +50,19 @@ app.get('/', async (req, res) => {
     }
   });
 
+// ✅ GET all users route
+app.get('/search_users', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM search_users');
+    res.status(200).json(result.rows);
+    console.log('Fetched all search users');
+  } catch (error) {
+    console.log(`Error fetching users: ${error.message}`);
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
