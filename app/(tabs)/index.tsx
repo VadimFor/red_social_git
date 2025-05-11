@@ -3,8 +3,6 @@ import { Image, StyleSheet, FlatList, Text, View, Dimensions } from 'react-nativ
 
 export default function HomeScreen() {
 
-  console.log("index tab triggered");
-
   interface User {
     id: string;
     name: string;
@@ -13,6 +11,11 @@ export default function HomeScreen() {
   }
 
   const [list, setUsersList] = useState<User[]>([]);
+
+  const testUser : User = {id: '1',name: 'John Doe',age: 30,images: ['https://example.com/image1.jpg',]}
+
+  //añadir un usuario de prueba
+  setUsersList((prev) => [...prev, testUser]);
 
   React.useEffect(() => {
     const fetchUsers = async () => {

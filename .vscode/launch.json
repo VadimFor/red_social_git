@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "expo",
+      "request": "attach",
+      "name": "Debug Expo app",
+      "projectRoot": "${workspaceFolder}",
+      "bundlerPort": "8081",
+      "bundlerHost": "127.0.0.1",
+
+    },
+    {
+      "cwd": "${workspaceFolder}",
+      "name": "Debug Android",
+      "program": "${workspaceFolder}/.vscode/launchReactNative.js",
+      "type": "reactnative",
+      "request": "launch",
+      "platform": "android",
+      "sourceMaps": true,
+    },
+    {
+      "cwd": "${workspaceFolder}",
+      "name": "Debug iOS",
+      "program": "${workspaceFolder}/.vscode/launchReactNative.js",
+      "type": "reactnative",
+      "request": "launch",
+      "platform": "ios",
+      "sourceMaps": true,
+    }
+  ]
+}
