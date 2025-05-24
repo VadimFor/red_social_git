@@ -3,8 +3,9 @@ import { Image, StyleSheet, FlatList, Text, View, Dimensions } from 'react-nativ
 
 export default function HomeScreen() {
 
+  
   interface User {
-    id: string;
+    username: string;
     name: string;
     age: number;
     images: string[];
@@ -12,13 +13,16 @@ export default function HomeScreen() {
 
   const [list, setUsersList] = useState<User[]>([]);
 
-  const testUser : User = {id: '1',name: 'John Doe',age: 30,images: ['https://example.com/image1.jpg',]}
+  const testUser : User = {username: 'utest1',name: 'John Doe',age: 30,images: ['https://example.com/image1.jpg',]}
 
-  //añadir un usuario de prueba
-  setUsersList((prev) => [...prev, testUser]);
+  //React.useEffect(() => {
+  //  setUsersList((prevList) => [...prevList, testUser]);
+  //}, []); // Empty dependency array ensures this runs only once
 
+  
   React.useEffect(() => {
-    const fetchUsers = async () => {
+
+      const fetchUsers = async () => {
       try {
         const response = await fetch('http://192.168.18.87:3000/search_users', {
           method: 'GET',
@@ -26,13 +30,21 @@ export default function HomeScreen() {
         });
 
         const data = await response.json();     
-        console.log('@@@DATA:', data.data);
-
-        if (data.success) {
-          console.log('@@@DATA:', data);
-          setUsersList(data.data);
+        console.log('@@@DATA[0]:', data[0]);
+        
+        const i = 0;
+        
+        if (data.length !== 0) {
+          const users_transform: User[] = data.map((item:any) => ({
+            username : item.username,
+            name: item.name,
+            age: item.age,
+            //images: [item.img1, item.img2, item.img3].filter(Boolean)
+            images: item.img1
+          }))
+          setUsersList(users_transform);
         } else {
-          alert('data failed');
+          alert('data empty');
         }
       } catch (error) {
         console.error(error);
@@ -41,7 +53,7 @@ export default function HomeScreen() {
     };
 
     fetchUsers();
-  }, []);
+  }, []); // <- para evitar los infinite loops al rerenderizar por culpa se setUsersList
 
   return (
     <View style={{ flex: 1 }}>
@@ -50,7 +62,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <FlatList
         data={list}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.username}
         renderItem={({ item }) => (
           <View style={styles.itembox}>
             {/* Horizontal Slider for Images */}
@@ -59,15 +71,15 @@ export default function HomeScreen() {
               horizontal
               pagingEnabled
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(imageUri, index) => index.toString()}
-              renderItem={({ item: imageUri }) => (
-                <Image source={{ uri: imageUri }} style={styles.image} />
+              keyExtractor={(images, index) => index.toString()}
+              renderItem={({ item: images }) => (
+                <Image source={{ uri: images }} style={styles.image} />
               )}
             />
             {/* Text Information */}
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
-              <Text style={{ fontSize: 20, color: 'white', marginRight: 10 }}>{item.name}</Text>
-              <Text style={{ fontSize: 20, color: 'white', marginRight: 10 }}>{item.age}</Text>
+              <Text style={{ fontSize: 20, color: 'black', marginRight: 10 }}>{item.name}</Text>
+              <Text style={{ fontSize: 20, color: 'black', marginRight: 10 }}>{item.age}</Text>
             </View>
           </View>
         )}
